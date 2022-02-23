@@ -6,17 +6,25 @@ const app = express();
 app.use(express.json());
 
 // array para armazenamento provisório dos dados do cliente //
-const costumers = [];
+const customers = [];
 
 // criar conta - método post //
 app.post("/account", (request, response) => {
     const { cpf, name } = request.body;
-    const id = uuidv4();
 
-    costumers.push({
+    // checando se o cpf do novo cadastro já existe - se existir já dá erro //
+    const customerAlreadyExists = customers.some(
+        (customers) => customers.cpf === cpf
+    );
+
+    if (customerAlreadyExists) {
+        return response.status(400).json({error:"Customer already exists!"})
+    };
+
+    customers.push({
         cpf,
         name,
-        id,
+        id: uuidv4(),
         statement: []
     });
 
