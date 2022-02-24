@@ -21,6 +21,7 @@ app.post("/account", (request, response) => {
         return response.status(400).json({error:"Customer already exists!"})
     };
 
+    // push para enviar a informação para o array acima //
     customers.push({
         cpf,
         name,
@@ -29,6 +30,16 @@ app.post("/account", (request, response) => {
     });
 
     return response.status(201).send();
+});
+
+// buscar extrato - método get //
+app.get("/statement/:cpf", (request, response) => {
+    const { cpf } = request.params;
+
+    // procurar se existe algum cliente com o cpf já cadastrado (.find pq precisa retornar o objeto com as informações //
+    const customer = customers.find(customer => customer.cpf === cpf);
+
+    return response.json(customer.statement);
 });
 
 app.listen(3333);
