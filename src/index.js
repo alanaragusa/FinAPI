@@ -20,6 +20,8 @@ function verifyIfExistsAccountCPF(request, response,next) {
         return response.status(400).json({error: "Customer not found"});
     }
 
+    request.customer = customer;
+
     return next();
 }
 
@@ -49,6 +51,9 @@ app.post("/account", (request, response) => {
 
 // buscar extrato - método get //
 app.get("/statement", verifyIfExistsAccountCPF, (request, response) => {
+    // desestruturação do customer de dentro do request - acesso a informação //
+    const { customer } = request;
+
     return response.json(customer.statement);
 });
 
