@@ -8,6 +8,21 @@ app.use(express.json());
 // array para armazenamento provisório dos dados do cliente //
 const customers = [];
 
+// middleware //
+function verifyIfExistsAccountCPF(request, response,next) {
+    const { cpf } = request.headers;
+
+    // procurar se existe algum cliente com o cpf já cadastrado (.find pq precisa retornar o objeto com as informações //
+    const customer = customers.find(customer => customer.cpf === cpf);
+
+    // verificação da existência do cliente //
+    if(!customer){
+        return response.status(400).json({error: "Customer not found"});
+    }
+
+    return next();
+}
+
 // criar conta - método post //
 app.post("/account", (request, response) => {
     const { cpf, name } = request.body;
@@ -33,17 +48,7 @@ app.post("/account", (request, response) => {
 });
 
 // buscar extrato - método get //
-app.get("/statement", (request, response) => {
-    const { cpf } = request.headers;
-
-    // procurar se existe algum cliente com o cpf já cadastrado (.find pq precisa retornar o objeto com as informações //
-    const customer = customers.find(customer => customer.cpf === cpf);
-
-    // verificação da existência do cliente //
-    if(!customer){
-        return response.status(400).json({error: "Customer not found"});
-    }
-
+app.get("/statement", verifyIfExistsAccountCPF, (request, response) => {
     return response.json(customer.statement);
 });
 
