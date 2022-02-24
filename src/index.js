@@ -33,11 +33,16 @@ app.post("/account", (request, response) => {
 });
 
 // buscar extrato - método get //
-app.get("/statement/:cpf", (request, response) => {
-    const { cpf } = request.params;
+app.get("/statement", (request, response) => {
+    const { cpf } = request.headers;
 
     // procurar se existe algum cliente com o cpf já cadastrado (.find pq precisa retornar o objeto com as informações //
     const customer = customers.find(customer => customer.cpf === cpf);
+
+    // verificação da existência do cliente //
+    if(!customer){
+        return response.status(400).json({error: "Customer not found"});
+    }
 
     return response.json(customer.statement);
 });
