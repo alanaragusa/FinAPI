@@ -123,7 +123,7 @@ app.get("/statement/date", verifyIfExistsAccountCPF, (request, response) => {
     const { date } = request.query;
 
     // formatar data - qualquer horário //
-    const dateFormat = new Date(date + "00:00");
+    const dateFormat = new Date(date + " 00:00");
 
     // filtro para retornar as operações do dia pedido //
     const statement = customer.statement.filter((statement) => statement.created_at.toDateString() === new Date(dateFormat).toDateString());
