@@ -115,4 +115,20 @@ app.post("/withdraw", verifyIfExistsAccountCPF, (request, response) => {
     return response.status(201).send();
 });
 
+// buscar extrato por data - método get //
+app.get("/statement/date", verifyIfExistsAccountCPF, (request, response) => {
+    // desestruturação do customer de dentro do request - acesso a informação //
+    const { customer } = request;
+    // receber a data pelos query params //
+    const { date } = request.query;
+
+    // formatar data - qualquer horário //
+    const dateFormat = new Date(date + "00:00");
+
+    // filtro para retornar as operações do dia pedido //
+    const statement = customer.statement.filter((statement) => statement.created_at.toDateString() === new Date(dateFormat).toDateString());
+
+    return response.json(statement);
+});
+
 app.listen(3333);
