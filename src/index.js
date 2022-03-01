@@ -27,11 +27,15 @@ function verifyIfExistsAccountCPF(request, response,next) {
 
 // função para cálculo do balanço //
 function getBalance(statement) {
-    statement.reduce((acc, operation) => {
+    const balance = statement.reduce((acc, operation) => {
         if(operation.type === 'credit') {
             return acc + operation.amount;
+        } else {
+            return acc - operation.amount;
         }
-    })
+    }, 0);
+
+    return balance;
 }
 
 // criar conta - método post //
@@ -94,7 +98,7 @@ app.post("/withdraw", verifyIfExistsAccountCPF, (request, response) => {
     // recuperar o customer do verifyIfExistsAccountCPF //
     const { customer } = request;
 
-    
+    const balance = getBalance(customer.statement);
 });
 
 app.listen(3333);
