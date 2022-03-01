@@ -25,6 +25,15 @@ function verifyIfExistsAccountCPF(request, response,next) {
     return next();
 }
 
+// função para cálculo do balanço //
+function getBalance(statement) {
+    statement.reduce((acc, operation) => {
+        if(operation.type === 'credit') {
+            return acc + operation.amount;
+        }
+    })
+}
+
 // criar conta - método post //
 app.post("/account", (request, response) => {
     const { cpf, name } = request.body;
@@ -55,6 +64,37 @@ app.get("/statement", verifyIfExistsAccountCPF, (request, response) => {
     const { customer } = request;
 
     return response.json(customer.statement);
+});
+
+// realizar um depósito - método post //
+app.post("/deposit", verifyIfExistsAccountCPF, (request, response) => {
+    // recebemos as informações de descrição e quantia dos body params //
+    const { description, amount } = request.body;
+
+    // recuperar o customer do verifyIfExistsAccountCPF //
+    const { customer } = request;
+
+    // criação da operação de depósito //
+    const statementOperation = {
+        description,
+        amount,
+        created_at: new Date(),
+        type: "credit"
+    }
+    customer.statement.push(statementOperation);
+
+    return response.status(201).send();
+});
+
+// realizar um saque - método post //
+app.post("/withdraw", verifyIfExistsAccountCPF, (request, response) => {
+    // recebemos o valor do saque do body params //
+    const { amount } = request.body;
+
+    // recuperar o customer do verifyIfExistsAccountCPF //
+    const { customer } = request;
+
+    
 });
 
 app.listen(3333);
