@@ -9,6 +9,7 @@
 - Deve ser possível atualizar dados da conta do cliente
 - Deve ser possível obter dados da conta do cliente
 - Deve ser possível deletar uma conta
+- Deve ser possível retornar o balance
 
 ## Regras de negócio
 - Não deve ser possível cadastrar uam conta com CPF já existente 
