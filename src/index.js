@@ -143,10 +143,18 @@ app.put("/account", verifyIfExistsAccountCPF, (request, response) => {
 
 // obter dados da conta do cliente - método get //
 app.get("/account", verifyIfExistsAccountCPF, (request, response) => {
-    // desestruturação do customer de dentro do request - acesso a informação //
     const { customer } = request;
 
     return response.json(customer);
-})
+});
+
+// remover conta - método delete //
+app.delete("/account", verifyIfExistsAccountCPF, (request, response) => {
+    const { customer } = request;
+
+    customers.splice(customer, 1);
+
+    return response.status(200).json(customers);
+});
 
 app.listen(3333);
