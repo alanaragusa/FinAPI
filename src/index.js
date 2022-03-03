@@ -141,4 +141,12 @@ app.put("/account", verifyIfExistsAccountCPF, (request, response) => {
     return response.status(201).send();
 });
 
+// obter dados da conta do cliente - método get //
+app.get("/account", verifyIfExistsAccountCPF, (request, response) => {
+    // desestruturação do customer de dentro do request - acesso a informação //
+    const { customer } = request;
+
+    return response.json(customer);
+})
+
 app.listen(3333);
